@@ -4,6 +4,7 @@ Can run just the API, just the pipeline, or both.
 """
 import sys
 import asyncio
+import logging
 import uvicorn
 from loguru import logger
 
@@ -20,6 +21,9 @@ logger.add(
     retention="14 days",
     level="DEBUG",
 )
+
+# Suppress verbose SQLAlchemy SQL query logs
+logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
 
 def main():

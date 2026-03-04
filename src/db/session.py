@@ -19,14 +19,14 @@ _db_url = config.env.database_url
 if "sqlite" in _db_url:
     engine = create_async_engine(
         _db_url,
-        echo=config.env.app_env == "development",
+        echo=False,
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
 else:
     engine = create_async_engine(
         _db_url,
-        echo=config.env.app_env == "development",
+        echo=False,
         pool_size=5,
         max_overflow=10,
         pool_pre_ping=True,
