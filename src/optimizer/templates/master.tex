@@ -1,0 +1,105 @@
+%─────────────────────────────────────────────────
+% AutoApply Master Resume Template
+% Designed for maximum ATS compatibility
+% Clean text extraction, no graphics, no columns
+%─────────────────────────────────────────────────
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+% Minimal formatting for ATS
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+\setlist[itemize]{nosep, leftmargin=1.5em, label=\textbullet}
+
+\begin{document}
+
+%── HEADER ────────────────────────────────────────
+\begin{center}
+    {\LARGE \textbf{YOUR FULL NAME}} \\[2pt]
+    \small
+    Your City, State $\cdot$
+    \href{mailto:your.email@gmail.com}{your.email@gmail.com} $\cdot$
+    (XXX) XXX-XXXX $\cdot$
+    \href{https://linkedin.com/in/yourprofile}{LinkedIn} $\cdot$
+    \href{https://github.com/yourusername}{GitHub}
+\end{center}
+
+%── SUMMARY ───────────────────────────────────────
+\section{Summary}
+Full Stack Software Engineer with 3+ years of experience in Java, Python, and
+cloud-native application development. Proficient in building scalable RESTful
+microservices using Spring Boot and FastAPI, with hands-on experience in React,
+AWS, Docker, and Kubernetes. Passionate about leveraging AI/ML technologies
+to solve real-world problems. Seeking opportunities in software engineering
+and AI engineering roles.
+
+%── SKILLS ────────────────────────────────────────
+\section{Technical Skills}
+\textbf{Languages:} Java, Python, JavaScript, TypeScript, SQL, HTML/CSS \\
+\textbf{Frameworks:} Spring Boot, React, Node.js, FastAPI, Django, Express.js \\
+\textbf{Cloud \& DevOps:} Amazon Web Services (AWS), Azure, Docker, Kubernetes, CI/CD, Jenkins, GitHub Actions, Terraform \\
+\textbf{Databases:} PostgreSQL, MongoDB, Redis, MySQL, Elasticsearch \\
+\textbf{Tools:} Git, Jira, Agile/Scrum, REST APIs, GraphQL, Kafka, Microservices Architecture \\
+\textbf{AI/ML:} TensorFlow, PyTorch, LangChain, OpenAI API, NLP, Computer Vision
+
+%── EXPERIENCE ────────────────────────────────────
+\section{Professional Experience}
+
+\textbf{Software Engineer} \hfill Company Name \\
+\textit{City, State} \hfill \textit{Month YYYY -- Present}
+\begin{itemize}
+    \item Designed and developed RESTful microservices APIs using Spring Boot and Java, serving 50,000+ daily active users with 99.9\% uptime
+    \item Built responsive front-end interfaces using React and TypeScript, improving user engagement by 35\%
+    \item Implemented CI/CD pipelines using Jenkins and GitHub Actions, reducing deployment time by 60\%
+    \item Deployed containerized applications on AWS ECS with Docker and Kubernetes, achieving 40\% cost reduction
+    \item Integrated PostgreSQL and Redis for data persistence and caching, optimizing query response times by 45\%
+    \item Collaborated with cross-functional teams using Agile/Scrum methodology to deliver features on schedule
+\end{itemize}
+
+\textbf{Software Developer Intern} \hfill Another Company \\
+\textit{City, State} \hfill \textit{Month YYYY -- Month YYYY}
+\begin{itemize}
+    \item Developed full-stack web applications using Python/Django backend and React frontend
+    \item Created data pipelines using Python and SQL to process and analyze 1M+ records daily
+    \item Built RESTful APIs consumed by mobile and web clients, handling 10,000+ requests per minute
+    \item Implemented unit and integration tests achieving 90\%+ code coverage
+\end{itemize}
+
+%── PROJECTS ──────────────────────────────────────
+\section{Projects}
+
+\textbf{AI-Powered Job Application Agent} \hfill \textit{Python, FastAPI, React, Claude API}
+\begin{itemize}
+    \item Engineered an autonomous system that scrapes job listings, optimizes resumes using LLMs, and auto-applies to 50+ positions daily
+    \item Implemented 3-layer ATS scoring engine using TF-IDF, keyword matching, and AI validation
+    \item Built full-stack dashboard with React and FastAPI for real-time monitoring and analytics
+\end{itemize}
+
+\textbf{Cloud-Native Microservices Platform} \hfill \textit{Java, Spring Boot, AWS, Docker}
+\begin{itemize}
+    \item Architected a distributed microservices system with service discovery, API gateway, and event-driven communication using Kafka
+    \item Deployed on AWS using Docker, Kubernetes, and Terraform with automated CI/CD
+\end{itemize}
+
+%── EDUCATION ─────────────────────────────────────
+\section{Education}
+
+\textbf{Master of Science in Computer Science} \hfill University Name \\
+\textit{City, State} \hfill \textit{Graduation: YYYY} \\
+GPA: 3.8/4.0 $\cdot$ Relevant Coursework: Machine Learning, Distributed Systems, Cloud Computing, NLP
+
+%── CERTIFICATIONS ────────────────────────────────
+\section{Certifications}
+AWS Certified Solutions Architect -- Associate $\cdot$
+AWS Certified Developer -- Associate
+
+\end{document}

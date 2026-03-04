@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════
+# AutoApply Agent — Master Configuration
+# ═══════════════════════════════════════════════════
+
+# ── Application Rules ────────────────────────────
+rules:
+  max_apps_per_day: 55                    # 50 + buffer
+  max_per_company: 3                      # max active apps per company
+  min_match_score: 80                     # minimum ATS match to proceed
+  ats_threshold_standard: 90              # submit standard roles at 90%+
+  ats_threshold_top_tier: 96              # target for priority companies
+  max_iterations_standard: 2              # optimization loops for standard
+  max_iterations_top_tier: 3              # optimization loops for top-tier
+  no_fabrication: true                    # ABSOLUTE: never invent experience
+  check_robots_txt: true                  # mandatory before visiting sites
+  check_blacklist: true                   # enforce company blacklist
+  freshness_boost_hours: 4                # jobs < N hours old get 1.3x priority
+  freshness_boost_multiplier: 1.3
+  stale_deprioritize_days: 14             # jobs > N days get 0.7x priority
+  stale_deprioritize_multiplier: 0.7
+
+# ── Schedule ─────────────────────────────────────
+schedule:
+  harvest_time: "06:00"
+  apply_start: "08:00"
+  apply_end: "22:00"
+  email_check_times: ["12:00", "18:00", "22:30"]
+  report_time: "22:30"
+  cleanup_time: "23:00"
+  timezone: "US/Eastern"
+  min_gap_minutes: 18
+  max_gap_minutes: 28
+  max_apps_per_hour: 4
+
+# ── Visa / Sponsorship Filter ────────────────────
+visa_filter:
+  block_signals:
+    - "no sponsorship"
+    - "not sponsor"
+    - "without sponsorship"
+    - "does not sponsor"
+    - "unable to sponsor"
+    - "will not sponsor"
+    - "cannot sponsor"
+    - "us citizens only"
+    - "us citizen only"
+    - "u.s. citizen"
+    - "united states citizen"
+    - "us persons only"
+    - "us person only"
+    - "permanent resident only"
+    - "green card holder"
+    - "must be authorized to work in the us without"
+    - "security clearance required"
+    - "active security clearance"
+    - "government contract"
+    - "itar"
+    - "no visa"
+    - "no work visa"
+  allow_signals:
+    - "visa sponsorship available"
+    - "visa sponsorship"
+    - "will sponsor"
+    - "sponsorship available"
+    - "opt welcome"
+    - "cpt welcome"
+    - "opt/cpt"
+    - "f1 visa"
+    - "work authorization sponsorship"
+    - "open to sponsorship"
+  llm_confidence_threshold: 0.90
+
+# ── Job Sources ──────────────────────────────────
+sources:
+  adzuna:
+    enabled: true
+    country: "us"
+    results_per_page: 50
+    max_pages: 5
+  jsearch:
+    enabled: true
+    results_per_page: 20
+    max_pages: 10
+  remoteok:
+    enabled: true
+  ats_feeds:
+    enabled: true
+
+# ── Target Job Criteria ──────────────────────────
+job_criteria:
+  titles:
+    - "Software Engineer"
+    - "Software Developer"
+    - "Full Stack Developer"
+    - "Full Stack Engineer"
+    - "Backend Engineer"
+    - "Backend Developer"
+    - "Java Developer"
+    - "Python Developer"
+    - "AI Engineer"
+    - "ML Engineer"
+    - "Machine Learning Engineer"
+    - "Data Engineer"
+  locations:
+    - "United States"
+    - "Remote"
+  experience_level:
+    - "entry"
+    - "mid"
+    - "junior"
+    - "associate"
+  exclude_keywords:
+    - "staff engineer"
+    - "principal"
+    - "director"
+    - "VP"
+    - "lead architect"
+
+# ── Anti-Detection ───────────────────────────────
+stealth:
+  min_form_time_seconds: 180              # 3 min minimum per form
+  typing_speed_wpm:
+    name: 60
+    email: 50
+    address: 40
+    default: 45
+  typo_rate: 0.02
+  mouse_overshoot_probability: 0.15
+  scroll_pause_min: 1.5
+  scroll_pause_max: 4.5
+  captcha_solver: "capsolver"             # capsolver or 2captcha
+  proxy_for_scraping_only: true
+
+# ── ATS Scoring Weights ─────────────────────────
+scoring:
+  keyword_weight: 0.45
+  cosine_weight: 0.30
+  llm_weight: 0.25
+
+# ── LLM Models ──────────────────────────────────
+llm:
+  scoring_model: "claude-haiku-4-5-20251001"
+  writing_model: "claude-sonnet-4-5-20250929"
+  max_tokens_scoring: 1024
+  max_tokens_writing: 4096
+  temperature_scoring: 0.1
+  temperature_writing: 0.3

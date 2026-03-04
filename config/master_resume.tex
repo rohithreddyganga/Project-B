@@ -1,0 +1,111 @@
+%% ═══════════════════════════════════════════════════════
+%%  AutoApply — Master Resume Template (ATS-Optimized)
+%%  - Clean text extraction for ATS parsers
+%%  - No graphics, no columns, no tables for layout
+%%  - Uses standard fonts (Latin Modern)
+%% ═══════════════════════════════════════════════════════
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+% ATS-friendly: no fancy fonts, standard encoding
+\hypersetup{hidelinks}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Section formatting — clean, parseable
+\titleformat{\section}{\large\bfseries\uppercase}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+% Tight lists for bullet points
+\setlist[itemize]{leftmargin=1.5em, itemsep=1pt, parsep=0pt, topsep=3pt}
+
+\begin{document}
+
+%% ── HEADER ─────────────────────────────────────────
+{\centering
+{\LARGE\bfseries YOUR FULL NAME}\\[4pt]
+{\small
+\href{mailto:your.email@gmail.com}{your.email@gmail.com} $\vert$
++1-XXX-XXX-XXXX $\vert$
+\href{https://linkedin.com/in/yourprofile}{linkedin.com/in/yourprofile} $\vert$
+\href{https://github.com/yourusername}{github.com/yourusername} $\vert$
+City, State
+}\\
+}
+
+%% ── PROFESSIONAL SUMMARY ──────────────────────────
+\section{Professional Summary}
+Software Engineer with X+ years of experience in full-stack development, microservices architecture, and cloud-native applications. Proficient in Java, Python, Spring Boot, React, and AWS. Passionate about leveraging AI/ML to build scalable, impactful solutions. Master's in Computer Science.
+
+%% ── TECHNICAL SKILLS ──────────────────────────────
+\section{Technical Skills}
+\textbf{Languages:} Java, Python, JavaScript, TypeScript, SQL, HTML/CSS\\
+\textbf{Frameworks:} Spring Boot, React, Node.js, FastAPI, Django, Express.js\\
+\textbf{Cloud \& DevOps:} Amazon Web Services (AWS), Google Cloud Platform (GCP), Docker, Kubernetes, CI/CD, Jenkins, Terraform\\
+\textbf{Databases:} PostgreSQL, MongoDB, Redis, MySQL, DynamoDB\\
+\textbf{AI/ML:} TensorFlow, PyTorch, LangChain, OpenAI API, Claude API, Hugging Face\\
+\textbf{Tools:} Git, Jira, Agile/Scrum, REST APIs, GraphQL, Microservices, Apache Kafka
+
+%% ── EXPERIENCE ────────────────────────────────────
+\section{Professional Experience}
+
+\textbf{Software Engineer} \hfill Company Name\\
+\textit{City, State} \hfill \textit{Month Year -- Present}
+\begin{itemize}
+    \item Designed and developed RESTful microservices APIs using Spring Boot and Java, serving 10,000+ daily active users with 99.9\% uptime
+    \item Built responsive front-end applications using React and TypeScript, improving user engagement by 25\%
+    \item Implemented CI/CD pipelines with Jenkins and Docker, reducing deployment time from 2 hours to 15 minutes
+    \item Developed data processing pipelines using Python and Apache Kafka, handling 1M+ events per day
+    \item Collaborated with cross-functional teams in Agile/Scrum environment to deliver features on schedule
+\end{itemize}
+
+\textbf{Software Developer Intern} \hfill Company Name\\
+\textit{City, State} \hfill \textit{Month Year -- Month Year}
+\begin{itemize}
+    \item Developed full-stack web application using Node.js, Express, and React, serving 5,000+ users
+    \item Designed and optimized PostgreSQL database schemas, improving query performance by 40\%
+    \item Created automated test suites achieving 85\% code coverage using JUnit and Selenium
+    \item Integrated third-party APIs for payment processing and email notification services
+\end{itemize}
+
+%% ── PROJECTS ──────────────────────────────────────
+\section{Projects}
+
+\textbf{AI-Powered Job Application Agent} \hfill \textit{Python, FastAPI, Claude API, Playwright}
+\begin{itemize}
+    \item Built autonomous job application system using LLM-powered resume optimization and browser automation
+    \item Implemented 3-layer ATS scoring engine (TF-IDF + keyword matching + LLM validation) achieving 96\%+ match rates
+    \item Designed full-stack dashboard with React and WebSocket for real-time application tracking
+\end{itemize}
+
+\textbf{Cloud-Native E-Commerce Platform} \hfill \textit{Java, Spring Boot, AWS, Docker}
+\begin{itemize}
+    \item Architected microservices-based e-commerce platform deployed on AWS ECS with auto-scaling
+    \item Implemented event-driven architecture using Apache Kafka for order processing and inventory management
+    \item Achieved 99.95\% availability with comprehensive monitoring using CloudWatch and Grafana
+\end{itemize}
+
+%% ── EDUCATION ─────────────────────────────────────
+\section{Education}
+
+\textbf{Master of Science in Computer Science} \hfill University Name\\
+\textit{City, State} \hfill \textit{Graduation Year}\\
+GPA: 3.8/4.0 $\vert$ Relevant Coursework: Machine Learning, Distributed Systems, Cloud Computing, NLP
+
+\textbf{Bachelor of Technology in Computer Science} \hfill University Name\\
+\textit{City, Country} \hfill \textit{Graduation Year}
+
+%% ── CERTIFICATIONS ────────────────────────────────
+\section{Certifications}
+AWS Certified Solutions Architect -- Associate $\vert$
+Oracle Certified Professional: Java SE Developer
+
+\end{document}

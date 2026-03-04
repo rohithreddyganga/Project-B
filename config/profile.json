@@ -1,0 +1,53 @@
+{
+  "personal": {
+    "first_name": "YOUR_FIRST_NAME",
+    "last_name": "YOUR_LAST_NAME",
+    "email": "your.email@gmail.com",
+    "phone": "+1-XXX-XXX-XXXX",
+    "linkedin": "https://linkedin.com/in/yourprofile",
+    "github": "https://github.com/yourusername",
+    "portfolio": "https://yourportfolio.com",
+    "location": {
+      "city": "Your City",
+      "state": "TX",
+      "country": "US",
+      "zip": "75001"
+    }
+  },
+  "work_authorization": {
+    "status": "F1-STEM OPT",
+    "requires_sponsorship": true,
+    "authorized_to_work": true,
+    "visa_notes": "Currently on F1-STEM OPT, will require H-1B sponsorship"
+  },
+  "education": [
+    {
+      "degree": "Master of Science",
+      "field": "Computer Science",
+      "school": "Your University",
+      "graduation": "2025",
+      "gpa": "3.8"
+    }
+  ],
+  "experience_years": 3,
+  "skills": {
+    "languages": ["Java", "Python", "JavaScript", "TypeScript", "SQL"],
+    "frameworks": ["Spring Boot", "React", "Node.js", "FastAPI", "Django"],
+    "cloud": ["AWS", "Azure", "GCP", "Docker", "Kubernetes"],
+    "databases": ["PostgreSQL", "MongoDB", "Redis", "MySQL"],
+    "tools": ["Git", "Jenkins", "CI/CD", "Jira", "Agile", "REST APIs", "GraphQL"],
+    "ai_ml": ["TensorFlow", "PyTorch", "LangChain", "OpenAI API", "NLP"]
+  },
+  "form_answers": {
+    "authorized_to_work_in_us": "Yes",
+    "require_sponsorship": "Yes",
+    "willing_to_relocate": "Yes",
+    "salary_expectation": "Negotiable",
+    "start_date": "Immediately",
+    "how_did_you_hear": "Company Career Page",
+    "gender": "Prefer not to say",
+    "race_ethnicity": "Prefer not to say",
+    "veteran_status": "No",
+    "disability_status": "Prefer not to say"
+  }
+}

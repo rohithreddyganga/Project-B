@@ -1,0 +1,9 @@
+# Companies to never apply to
+blacklist:
+  - "Example Scam Corp"
+  # Add companies here as needed
+
+# Domains to never visit
+blocked_domains:
+  - "scam-jobs.com"
+  # Add domains here as needed
