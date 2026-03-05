@@ -39,13 +39,30 @@ async def run_daily_pipeline():
         try:
             # ── Stage 1-2: Harvest ──────────────────────────
             new_jobs = await harvest_jobs(db)
-            if not new_jobs:
-                logger.info("No new jobs found. Pipeline complete.")
+
+            # Also pick up any previously scraped but unprocessed jobs
+            unprocessed_result = await db.execute(
+                select(Job).where(Job.status == JobStatus.scraped)
+                .order_by(Job.created_at.desc())
+            )
+            unprocessed_jobs = list(unprocessed_result.scalars().all())
+
+            # Merge: new jobs + existing unprocessed (avoid duplicates)
+            new_job_ids = {j.id for j in new_jobs}
+            jobs_to_process = list(new_jobs)
+            for job in unprocessed_jobs:
+                if job.id not in new_job_ids:
+                    jobs_to_process.append(job)
+
+            if not jobs_to_process:
+                logger.info("No new or unprocessed jobs found. Pipeline complete.")
                 return
+
+            logger.info(f"Processing {len(jobs_to_process)} jobs ({len(new_jobs)} new, {len(jobs_to_process) - len(new_jobs)} previously scraped)")
 
             # ── Stage 3: Visa Filter ────────────────────────
             visa_passed = []
-            for job in new_jobs:
+            for job in jobs_to_process:
                 status, reason = await check_visa(job.jd_text or "")
                 job.visa_status = status
                 if status == VisaStatus.ok or status == VisaStatus.unchecked:
