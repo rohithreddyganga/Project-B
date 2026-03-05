@@ -46,7 +46,7 @@ async def solve_hcaptcha(site_key: str, page_url: str) -> Optional[str]:
 
 async def _solve(task: dict) -> Optional[str]:
     """Submit task to CapSolver and poll for result."""
-    if not config.env.CAPSOLVER_API_KEY:
+    if not config.env.capsolver_api_key:
         logger.warning("No CapSolver API key configured")
         return None
 
@@ -56,7 +56,7 @@ async def _solve(task: dict) -> Optional[str]:
             resp = await client.post(
                 f"{CAPSOLVER_URL}/createTask",
                 json={
-                    "clientKey": config.env.CAPSOLVER_API_KEY,
+                    "clientKey": config.env.capsolver_api_key,
                     "task": task,
                 },
             )
@@ -76,7 +76,7 @@ async def _solve(task: dict) -> Optional[str]:
                 resp = await client.post(
                     f"{CAPSOLVER_URL}/getTaskResult",
                     json={
-                        "clientKey": config.env.CAPSOLVER_API_KEY,
+                        "clientKey": config.env.capsolver_api_key,
                         "taskId": task_id,
                     },
                 )

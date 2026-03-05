@@ -29,11 +29,26 @@ class ScrapedJob(BaseModel):
     def company_normalized(self) -> str:
         """Normalize company name for dedup and comparison."""
         name = self.company.lower().strip()
-        # Remove common suffixes
-        for suffix in [", inc.", ", inc", " inc.", " inc", ", llc", " llc",
-                       ", ltd", " ltd", " corp.", " corp", " co.", " co",
-                       ", l.p.", " l.p."]:
-            name = name.replace(suffix, "")
+        # Remove common suffixes using regex with $ anchor to avoid mid-word matches
+        # e.g. .replace(" corp", "") would turn "Microsoft Corporation" into "Microsoftoration"
+        suffix_patterns = [
+            r',?\s*incorporated$',
+            r',?\s*corporation$',
+            r',?\s*company$',
+            r',?\s*limited$',
+            r',?\s*inc\.?$',
+            r',?\s*llc\.?$',
+            r',?\s*ltd\.?$',
+            r',?\s*corp\.?$',
+            r',?\s*co\.?$',
+            r',?\s*l\.?p\.?$',
+            r',?\s*plc\.?$',
+            r',?\s*gmbh$',
+            r',?\s*&\s*co\.?$',
+        ]
+        for pattern in suffix_patterns:
+            name = re.sub(pattern, '', name)
+        name = name.rstrip(' ,.-&')
         return re.sub(r'\s+', ' ', name).strip()
 
     @property
