@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { List, Columns } from 'lucide-react';
 import api from '../api';
 import { Card, ScoreBadge, StatusPill, EmptyState } from '../components/shared';
 
@@ -32,16 +33,42 @@ export default function Applications() {
 
   return (
     <div className="fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 700 }}>Applications</h1>
-        <div style={{ display: 'flex', gap: 4 }}>
-          <TabBtn active={tab === 'list'} onClick={() => setTab('list')}>List View</TabBtn>
-          <TabBtn active={tab === 'kanban'} onClick={() => setTab('kanban')}>Kanban</TabBtn>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+      }}>
+        <div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>
+            Applications
+          </h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+            Track submitted applications and interview progress
+          </p>
+        </div>
+        <div style={{
+          display: 'flex',
+          gap: 2,
+          background: 'var(--bg-tertiary)',
+          borderRadius: 8,
+          padding: 3,
+          border: '1px solid var(--border)',
+        }}>
+          <TabBtn active={tab === 'list'} onClick={() => setTab('list')}>
+            <List size={13} /> List
+          </TabBtn>
+          <TabBtn active={tab === 'kanban'} onClick={() => setTab('kanban')}>
+            <Columns size={13} /> Kanban
+          </TabBtn>
         </div>
       </div>
 
       {loading ? (
-        <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading...</div>
+        <div style={{ padding: 50, textAlign: 'center', color: 'var(--text-muted)' }}>
+          <div className="shimmer" style={{ width: 200, height: 14, margin: '0 auto 12px' }} />
+          <div style={{ fontSize: 13 }}>Loading applications...</div>
+        </div>
       ) : tab === 'list' ? (
         <ApplicationsList items={items} />
       ) : (
@@ -65,50 +92,67 @@ function ApplicationsList({ items }) {
   }
 
   return (
-    <div style={{
-      background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-      borderRadius: 10, overflow: 'hidden',
-    }}>
+    <div className="glass-card" style={{ overflow: 'hidden', padding: 0 }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
         <thead>
-          <tr style={{ background: 'var(--bg-primary)', borderBottom: '1px solid var(--border)' }}>
+          <tr style={{
+            background: 'var(--bg-primary)',
+            borderBottom: '1px solid var(--border)',
+          }}>
             {['Company', 'Role', 'Initial Score', 'Optimized Score', 'Iterations', 'Status', 'Stage', 'Applied', 'Confirmation'].map(h => (
               <th key={h} style={{
-                padding: '10px 12px', textAlign: 'left', fontSize: 10, fontWeight: 700,
-                color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em',
+                padding: '11px 14px',
+                textAlign: 'left',
+                fontSize: 10,
+                fontWeight: 700,
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
               }}>{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {items.map((a, i) => (
-            <tr key={a.id} style={{ borderBottom: '1px solid var(--bg-tertiary)' }}>
-              <td style={{ padding: '10px 12px', fontWeight: 600 }}>{a.company}</td>
-              <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.role}</td>
-              <td style={{ padding: '10px 12px' }}>
+          {items.map((a) => (
+            <tr key={a.id} className="hoverable" style={{ borderBottom: '1px solid var(--border)' }}>
+              <td style={{ padding: '11px 14px', fontWeight: 600 }}>{a.company}</td>
+              <td style={{
+                padding: '11px 14px',
+                color: 'var(--text-secondary)',
+                maxWidth: 220,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>{a.role}</td>
+              <td style={{ padding: '11px 14px' }}>
                 <ScoreBadge score={a.match_score} size="sm" />
               </td>
-              <td style={{ padding: '10px 12px' }}>
+              <td style={{ padding: '11px 14px' }}>
                 <ScoreBadge score={a.ats_score} size="sm" />
                 {a.match_score && a.ats_score && a.ats_score > a.match_score && (
-                  <span className="mono" style={{ marginLeft: 4, fontSize: 10, color: 'var(--green)' }}>
+                  <span className="mono" style={{ marginLeft: 4, fontSize: 10, color: 'var(--green)', fontWeight: 700 }}>
                     +{(a.ats_score - a.match_score).toFixed(0)}
                   </span>
                 )}
               </td>
-              <td style={{ padding: '10px 12px' }}>
+              <td style={{ padding: '11px 14px' }}>
                 <span className="mono" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                   {a.optimization_iterations || 0}x
                 </span>
               </td>
-              <td style={{ padding: '10px 12px' }}><StatusPill status={a.status} /></td>
-              <td style={{ padding: '10px 12px' }}>
-                <StageBadge stage={a.interview_stage} />
-              </td>
-              <td style={{ padding: '10px 12px', color: 'var(--text-muted)', fontSize: 11 }}>
+              <td style={{ padding: '11px 14px' }}><StatusPill status={a.status} /></td>
+              <td style={{ padding: '11px 14px' }}><StageBadge stage={a.interview_stage} /></td>
+              <td style={{ padding: '11px 14px', color: 'var(--text-muted)', fontSize: 11 }}>
                 {a.applied_date ? new Date(a.applied_date).toLocaleDateString() : '—'}
               </td>
-              <td style={{ padding: '10px 12px', color: 'var(--text-muted)', fontSize: 11, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <td style={{
+                padding: '11px 14px',
+                color: 'var(--text-muted)',
+                fontSize: 11,
+                maxWidth: 120,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}>
                 {a.confirmation_number || '—'}
               </td>
             </tr>
@@ -125,35 +169,72 @@ function KanbanBoard({ pipeline }) {
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: `repeat(${INTERVIEW_STAGES.length}, minmax(150px, 1fr))`,
-      gap: 10, overflowX: 'auto',
+      gridTemplateColumns: `repeat(${INTERVIEW_STAGES.length}, minmax(155px, 1fr))`,
+      gap: 10,
+      overflowX: 'auto',
+      paddingBottom: 4,
     }}>
       {INTERVIEW_STAGES.map(st => {
         const items = stages[st.key] || [];
         return (
-          <div key={st.key} style={{
-            background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-            borderRadius: 8, padding: 10, minHeight: 200,
+          <div key={st.key} className="glass-card" style={{
+            padding: 12,
+            minHeight: 220,
           }}>
             <div style={{
-              fontSize: 11, fontWeight: 700, color: st.color,
-              marginBottom: 10, textTransform: 'uppercase',
-              display: 'flex', justifyContent: 'space-between',
+              fontSize: 10,
+              fontWeight: 700,
+              color: st.color,
+              marginBottom: 10,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: 8,
+              borderBottom: `2px solid ${st.color}25`,
             }}>
               <span>{st.label}</span>
-              <span className="mono">{items.length}</span>
+              <span className="mono" style={{
+                padding: '2px 6px',
+                background: `${st.color}10`,
+                borderRadius: 10,
+                fontSize: 10,
+              }}>
+                {items.length}
+              </span>
             </div>
             {items.length === 0 ? (
-              <div style={{ fontSize: 10, color: 'var(--text-muted)', textAlign: 'center', padding: 16 }}>
+              <div style={{
+                fontSize: 10,
+                color: 'var(--text-muted)',
+                textAlign: 'center',
+                padding: 20,
+                opacity: 0.6,
+              }}>
                 No apps
               </div>
             ) : items.map((a, i) => (
               <div key={i} style={{
-                padding: '8px 10px', background: 'var(--bg-primary)',
-                borderRadius: 6, marginBottom: 6, border: '1px solid var(--border)',
-              }}>
-                <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 2 }}>{a.company}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{a.role}</div>
+                padding: '9px 11px',
+                background: 'var(--bg-primary)',
+                borderRadius: 8,
+                marginBottom: 6,
+                border: '1px solid var(--border)',
+                transition: 'border-color 0.2s, transform 0.15s',
+                cursor: 'default',
+              }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = `${st.color}30`;
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 3 }}>{a.company}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.4 }}>{a.role}</div>
               </div>
             ))}
           </div>
@@ -166,10 +247,11 @@ function KanbanBoard({ pipeline }) {
 function StageBadge({ stage }) {
   const meta = INTERVIEW_STAGES.find(s => s.key === stage) || { label: stage, color: 'var(--text-muted)' };
   return (
-    <span style={{
-      fontSize: 10, fontWeight: 600, color: meta.color,
-      padding: '2px 6px', background: `${meta.color}12`,
-      borderRadius: 3,
+    <span className="badge" style={{
+      color: meta.color,
+      background: `${meta.color}10`,
+      border: `1px solid ${meta.color}18`,
+      fontSize: 10,
     }}>
       {meta.label}
     </span>
@@ -179,11 +261,19 @@ function StageBadge({ stage }) {
 function TabBtn({ active, onClick, children }) {
   return (
     <button onClick={onClick} style={{
-      padding: '5px 12px', fontSize: 12, fontWeight: 500,
-      background: active ? 'var(--cyan-bg)' : 'transparent',
-      border: active ? '1px solid var(--cyan-dim)' : '1px solid transparent',
-      borderRadius: 5, color: active ? 'var(--cyan)' : 'var(--text-muted)',
-      cursor: 'pointer', fontFamily: 'inherit',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 5,
+      padding: '6px 14px',
+      fontSize: 12,
+      fontWeight: 600,
+      background: active ? 'var(--bg-elevated)' : 'transparent',
+      border: 'none',
+      borderRadius: 6,
+      color: active ? 'var(--text-primary)' : 'var(--text-muted)',
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      transition: 'all 0.15s',
     }}>
       {children}
     </button>

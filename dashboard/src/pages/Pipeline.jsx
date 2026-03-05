@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { Satellite, Link2, Shield, ShieldAlert, BarChart3, Tag, Wrench, MousePointer, Archive, Server, Wifi, DollarSign, ArrowDown } from 'lucide-react';
 import api from '../api';
 import { Card, StatCard, EmptyState } from '../components/shared';
 
 const STAGES = [
-  { name: 'Job Scrapers', sub: 'Adzuna · JSearch · RemoteOK · LinkedIn API · ActiveJobs · JobsSearch', icon: '📡', color: 'var(--cyan)' },
-  { name: 'Deduplicator', sub: 'SHA256 fingerprint — cross-source dedup', icon: '🔗', color: 'var(--text-muted)' },
-  { name: 'Visa Filter', sub: 'Regex pattern match + Claude Haiku fallback', icon: '🛂', color: 'var(--amber)' },
-  { name: 'Gate Check', sub: 'Per-company limits · URL dedup · Daily cap', icon: '🚧', color: '#f97316' },
-  { name: 'ATS Scorer', sub: 'TF-IDF cosine + keyword matching + LLM semantic', icon: '📊', color: 'var(--purple)' },
-  { name: 'Tier Classifier', sub: 'Top Tier companies get higher optimization', icon: '🏷️', color: '#ec4899' },
-  { name: 'Resume Optimizer', sub: 'Claude Sonnet iterates LaTeX to 85%+ ATS score', icon: '🔧', color: 'var(--blue)' },
-  { name: 'Browser Engine', sub: 'Playwright + stealth patches → ATS form fill', icon: '🖱️', color: 'var(--green)' },
-  { name: 'Archive & Report', sub: 'B2 cloud backup · screenshot · Telegram alert', icon: '📦', color: 'var(--text-muted)' },
+  { name: 'Job Scrapers', sub: 'Adzuna, JSearch, RemoteOK, LinkedIn API, ActiveJobs, JobsSearch', icon: Satellite, color: 'var(--cyan)' },
+  { name: 'Deduplicator', sub: 'SHA256 fingerprint — cross-source dedup', icon: Link2, color: 'var(--text-muted)' },
+  { name: 'Visa Filter', sub: 'Regex pattern match + Claude Haiku fallback', icon: Shield, color: 'var(--amber)' },
+  { name: 'Gate Check', sub: 'Per-company limits, URL dedup, daily cap', icon: ShieldAlert, color: '#f97316' },
+  { name: 'ATS Scorer', sub: 'TF-IDF cosine + keyword matching + LLM semantic', icon: BarChart3, color: 'var(--purple)' },
+  { name: 'Tier Classifier', sub: 'Top Tier companies get higher optimization', icon: Tag, color: '#ec4899' },
+  { name: 'Resume Optimizer', sub: 'Claude Sonnet iterates LaTeX to 85%+ ATS score', icon: Wrench, color: 'var(--blue)' },
+  { name: 'Browser Engine', sub: 'Playwright + stealth patches for ATS form fill', icon: MousePointer, color: 'var(--green)' },
+  { name: 'Archive & Report', sub: 'B2 cloud backup, screenshot, Telegram alert', icon: Archive, color: 'var(--text-muted)' },
 ];
 
 const HANDLERS = [
@@ -25,12 +26,12 @@ const HANDLERS = [
 ];
 
 const SCRAPERS = [
-  { name: 'Adzuna', type: 'REST API', key: 'ADZUNA_APP_ID + ADZUNA_API_KEY', limit: '10k/mo', status: 'active' },
-  { name: 'JSearch', type: 'RapidAPI', key: 'JSEARCH_API_KEY', limit: '200/day', status: 'active' },
-  { name: 'RemoteOK', type: 'Public JSON', key: 'None', limit: '∞', status: 'active' },
-  { name: 'LinkedIn API', type: 'RapidAPI', key: 'JSEARCH_API_KEY (shared)', limit: '500/day', status: 'active' },
-  { name: 'Active Jobs DB', type: 'RapidAPI', key: 'JSEARCH_API_KEY (shared)', limit: '1k/day', status: 'active' },
-  { name: 'Jobs Search API', type: 'RapidAPI', key: 'JSEARCH_API_KEY (shared)', limit: '500/day', status: 'active' },
+  { name: 'Adzuna', type: 'REST API', limit: '10k/mo', color: '#3b82f6' },
+  { name: 'JSearch', type: 'RapidAPI', limit: '200/day', color: '#10b981' },
+  { name: 'RemoteOK', type: 'Public JSON', limit: 'Unlimited', color: '#f59e0b' },
+  { name: 'LinkedIn API', type: 'RapidAPI', limit: '500/day', color: '#0a66c2' },
+  { name: 'Active Jobs DB', type: 'RapidAPI', limit: '1k/day', color: '#8b5cf6' },
+  { name: 'Jobs Search API', type: 'RapidAPI', limit: '500/day', color: '#ec4899' },
 ];
 
 export default function Pipeline({ stats }) {
@@ -45,73 +46,130 @@ export default function Pipeline({ stats }) {
     })();
   }, []);
 
-  const s = stats || {};
-
   return (
     <div className="fade-in">
-      <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>Pipeline</h1>
-
-      {/* Quick stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
-        <StatCard label="In Queue" value={queue?.total || 0} color="var(--cyan)" />
-        <StatCard label="Total Cost (30d)" value={costs ? `$${costs.total_cost}` : '—'} color="var(--amber)" />
-        <StatCard label="Cost / Application" value={costs ? `$${costs.per_application}` : '—'} color="var(--purple)" />
-        <StatCard label="Handlers Active" value={HANDLERS.filter(h => h.status === 'active').length} color="var(--green)" />
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>
+          Pipeline
+        </h1>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+          Architecture overview and system health
+        </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+      {/* Quick stats */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 14,
+        marginBottom: 24,
+      }}>
+        <StatCard label="In Queue" value={queue?.total || 0} color="var(--cyan)" icon={Wrench} />
+        <StatCard label="Total Cost (30d)" value={costs ? `$${costs.total_cost}` : '—'} color="var(--amber)" icon={DollarSign} />
+        <StatCard label="Cost / Application" value={costs ? `$${costs.per_application}` : '—'} color="var(--purple)" icon={BarChart3} />
+        <StatCard label="Handlers Active" value={HANDLERS.filter(h => h.status === 'active').length} color="var(--green)" icon={Server} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
         {/* Pipeline Architecture */}
         <Card title="Pipeline Architecture">
-          {STAGES.map((st, i) => (
-            <div key={i}>
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '10px 12px', background: 'var(--bg-primary)',
-                borderRadius: 8, marginBottom: 2,
-                border: '1px solid var(--border)',
-              }}>
+          {STAGES.map((st, i) => {
+            const Icon = st.icon;
+            return (
+              <div key={i}>
                 <div style={{
-                  width: 32, height: 32, borderRadius: 6,
-                  background: `${st.color}12`, display: 'flex',
-                  alignItems: 'center', justifyContent: 'center',
-                  fontSize: 16, flexShrink: 0,
-                }}>{st.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: st.color }}>{st.name}</div>
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{st.sub}</div>
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: '11px 14px',
+                  background: 'var(--bg-primary)',
+                  borderRadius: 10,
+                  marginBottom: 2,
+                  border: '1px solid var(--border)',
+                  transition: 'border-color 0.2s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = `${st.color}30`}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                >
+                  <div style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 8,
+                    background: `${st.color}10`,
+                    border: `1px solid ${st.color}18`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    <Icon size={16} color={st.color} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: st.color }}>{st.name}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.4 }}>{st.sub}</div>
+                  </div>
+                  <div className="mono" style={{
+                    fontSize: 9,
+                    color: 'var(--text-muted)',
+                    padding: '2px 6px',
+                    background: 'var(--bg-tertiary)',
+                    borderRadius: 4,
+                    letterSpacing: '0.04em',
+                  }}>
+                    {i + 1}
+                  </div>
                 </div>
-                <div className="mono" style={{ fontSize: 10, color: 'var(--text-muted)' }}>
-                  Stage {i + 1}
-                </div>
+                {i < STAGES.length - 1 && (
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: '2px 0',
+                  }}>
+                    <ArrowDown size={12} color="var(--text-muted)" style={{ opacity: 0.3 }} />
+                  </div>
+                )}
               </div>
-              {i < STAGES.length - 1 && (
-                <div style={{ width: 2, height: 4, background: 'var(--border)', margin: '0 auto' }} />
-              )}
-            </div>
-          ))}
+            );
+          })}
         </Card>
 
         {/* Right side */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           {/* ATS Handlers */}
           <Card title="ATS Handlers">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {HANDLERS.map((h, i) => (
                 <div key={i} style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 12px', background: 'var(--bg-primary)',
-                  borderRadius: 6, border: '1px solid var(--border)',
-                }}>
-                  <div>
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '9px 14px',
+                  background: 'var(--bg-primary)',
+                  borderRadius: 8,
+                  border: '1px solid var(--border)',
+                  transition: 'border-color 0.15s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--border-light)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Server size={13} color="var(--text-muted)" />
                     <span style={{ fontSize: 12, fontWeight: 600 }}>{h.name}</span>
-                    <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 8 }}>{h.url}</span>
+                    <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{h.url}</span>
                   </div>
-                  <span style={{
-                    fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 3,
+                  <span className="badge" style={{
+                    fontSize: 9,
                     color: h.status === 'active' ? 'var(--green)' : 'var(--amber)',
                     background: h.status === 'active' ? 'var(--green-bg)' : 'var(--amber-bg)',
+                    border: `1px solid ${h.status === 'active' ? 'var(--green)' : 'var(--amber)'}18`,
                   }}>
-                    {h.status === 'active' ? '● Active' : '○ Fallback'}
+                    <span style={{
+                      width: 5,
+                      height: 5,
+                      borderRadius: '50%',
+                      background: h.status === 'active' ? 'var(--green)' : 'var(--amber)',
+                    }} />
+                    {h.status === 'active' ? 'Active' : 'Fallback'}
                   </span>
                 </div>
               ))}
@@ -123,21 +181,38 @@ export default function Pipeline({ stats }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {SCRAPERS.map((sc, i) => (
                 <div key={i} style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 12px', background: 'var(--bg-primary)',
-                  borderRadius: 6, border: '1px solid var(--border)', fontSize: 12,
-                }}>
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '9px 14px',
+                  background: 'var(--bg-primary)',
+                  borderRadius: 8,
+                  border: '1px solid var(--border)',
+                  fontSize: 12,
+                  transition: 'border-color 0.15s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = `${sc.color}30`}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{
-                      width: 7, height: 7, borderRadius: '50%', background: 'var(--green)',
-                      boxShadow: '0 0 4px var(--green)',
+                    <div className="status-dot live" style={{
+                      background: sc.color,
+                      boxShadow: `0 0 6px ${sc.color}`,
+                      width: 6,
+                      height: 6,
                     }} />
                     <span style={{ fontWeight: 600 }}>{sc.name}</span>
-                    <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{sc.type}</span>
+                    <span style={{
+                      fontSize: 9,
+                      color: 'var(--text-muted)',
+                      padding: '1px 6px',
+                      background: 'var(--bg-tertiary)',
+                      borderRadius: 4,
+                    }}>
+                      {sc.type}
+                    </span>
                   </div>
-                  <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                    <span className="mono" style={{ fontSize: 10, color: 'var(--text-muted)' }}>{sc.limit}</span>
-                  </div>
+                  <span className="mono" style={{ fontSize: 10, color: 'var(--text-muted)' }}>{sc.limit}</span>
                 </div>
               ))}
             </div>
@@ -148,14 +223,34 @@ export default function Pipeline({ stats }) {
       {/* Cost breakdown */}
       {costs && costs.total_cost > 0 && (
         <Card title="Cost Breakdown (30 days)">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: 10,
+          }}>
             {Object.entries(costs.by_category || {}).map(([cat, amount]) => (
               <div key={cat} style={{
-                padding: '10px 12px', background: 'var(--bg-primary)',
-                borderRadius: 6, border: '1px solid var(--border)',
+                padding: '12px 14px',
+                background: 'var(--bg-primary)',
+                borderRadius: 8,
+                border: '1px solid var(--border)',
               }}>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>{cat}</div>
-                <div className="mono" style={{ fontSize: 16, fontWeight: 700, color: 'var(--amber)' }}>${amount}</div>
+                <div style={{
+                  fontSize: 10,
+                  color: 'var(--text-muted)',
+                  marginBottom: 4,
+                  textTransform: 'capitalize',
+                }}>
+                  {cat}
+                </div>
+                <div className="mono" style={{
+                  fontSize: 18,
+                  fontWeight: 800,
+                  color: 'var(--amber)',
+                  letterSpacing: '-0.03em',
+                }}>
+                  ${amount}
+                </div>
               </div>
             ))}
           </div>
