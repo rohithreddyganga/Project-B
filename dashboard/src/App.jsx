@@ -41,7 +41,13 @@ export default function App() {
         onTrigger={triggerPipeline}
         pipelineRunning={pipelineRunning}
       />
-      <main style={{ marginLeft: 'var(--sidebar-w)', flex: 1, padding: '24px 28px', maxWidth: 1280 }}>
+      <main style={{
+        marginLeft: 'var(--sidebar-w)',
+        flex: 1,
+        padding: '28px 32px',
+        maxWidth: 1340,
+        minHeight: '100vh',
+      }}>
         <Routes>
           <Route path="/" element={<Dashboard stats={stats} refresh={refresh} />} />
           <Route path="/jobs" element={<Jobs />} />

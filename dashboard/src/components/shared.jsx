@@ -1,20 +1,21 @@
 import React from 'react';
+import { Search } from 'lucide-react';
 
 // ── Status / Visa / Source metadata ────────────────────
 export const STATUS = {
-  scraped:             { label: 'Scraped',        color: 'var(--text-muted)',  bg: 'var(--bg-hover)' },
-  needs_review:        { label: 'Needs Review',   color: 'var(--amber)',       bg: 'var(--amber-bg)' },
-  visa_blocked:        { label: 'Visa Blocked',   color: 'var(--red)',         bg: 'var(--red-bg)' },
-  visa_unclear:        { label: 'Visa Unclear',   color: 'var(--amber)',       bg: 'var(--amber-bg)' },
-  gate_blocked:        { label: 'Gate Blocked',   color: '#f97316',            bg: 'rgba(249,115,22,0.08)' },
-  scoring:             { label: 'Scoring',        color: 'var(--purple)',      bg: 'var(--purple-bg)' },
-  below_threshold:     { label: 'Below Threshold',color: '#ec4899',            bg: 'rgba(236,72,153,0.08)' },
-  queued:              { label: 'Queued',          color: 'var(--cyan)',        bg: 'var(--cyan-bg)' },
-  optimizing:          { label: 'Optimizing',      color: 'var(--purple)',      bg: 'var(--purple-bg)' },
-  optimization_failed: { label: 'Opt. Failed',    color: 'var(--red)',         bg: 'var(--red-bg)' },
-  applying:            { label: 'Applying',        color: 'var(--blue)',        bg: 'var(--blue-bg)' },
-  submitted:           { label: 'Applied',         color: 'var(--green)',       bg: 'var(--green-bg)' },
-  failed:              { label: 'Failed',          color: 'var(--red)',         bg: 'var(--red-bg)' },
+  scraped:             { label: 'Scraped',         color: 'var(--text-muted)',  bg: 'var(--bg-hover)' },
+  needs_review:        { label: 'Needs Review',    color: 'var(--amber)',       bg: 'var(--amber-bg)' },
+  visa_blocked:        { label: 'Visa Blocked',    color: 'var(--red)',         bg: 'var(--red-bg)' },
+  visa_unclear:        { label: 'Visa Unclear',    color: 'var(--amber)',       bg: 'var(--amber-bg)' },
+  gate_blocked:        { label: 'Gate Blocked',    color: '#f97316',            bg: 'rgba(249,115,22,0.06)' },
+  scoring:             { label: 'Scoring',         color: 'var(--purple)',      bg: 'var(--purple-bg)' },
+  below_threshold:     { label: 'Below Threshold', color: '#ec4899',            bg: 'rgba(236,72,153,0.06)' },
+  queued:              { label: 'Queued',           color: 'var(--cyan)',        bg: 'var(--cyan-bg)' },
+  optimizing:          { label: 'Optimizing',       color: 'var(--purple)',      bg: 'var(--purple-bg)' },
+  optimization_failed: { label: 'Opt. Failed',     color: 'var(--red)',         bg: 'var(--red-bg)' },
+  applying:            { label: 'Applying',         color: 'var(--blue)',        bg: 'var(--blue-bg)' },
+  submitted:           { label: 'Applied',          color: 'var(--green)',       bg: 'var(--green-bg)' },
+  failed:              { label: 'Failed',           color: 'var(--red)',         bg: 'var(--red-bg)' },
 };
 
 export const VISA = {
@@ -38,12 +39,20 @@ export function ScoreBadge({ score, size = 'md' }) {
   if (score == null) return <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>—</span>;
   const s = Math.round(score);
   const color = s >= 80 ? 'var(--green)' : s >= 50 ? 'var(--amber)' : s >= 30 ? '#f97316' : 'var(--red)';
-  const sz = size === 'sm' ? { p: '1px 6px', fs: 11 } : { p: '2px 8px', fs: 12 };
+  const sz = size === 'sm' ? { p: '2px 8px', fs: 11 } : size === 'lg' ? { p: '4px 14px', fs: 16 } : { p: '3px 10px', fs: 12 };
   return (
     <span className="mono" style={{
-      display: 'inline-block', padding: sz.p, fontSize: sz.fs,
-      fontWeight: 700, color, background: `${color}12`,
-      border: `1px solid ${color}30`, borderRadius: 4,
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 4,
+      padding: sz.p,
+      fontSize: sz.fs,
+      fontWeight: 700,
+      color,
+      background: `${color}10`,
+      border: `1px solid ${color}25`,
+      borderRadius: 6,
+      letterSpacing: '-0.02em',
     }}>
       {s}%
     </span>
@@ -54,11 +63,20 @@ export function ScoreBadge({ score, size = 'md' }) {
 export function StatusPill({ status }) {
   const m = STATUS[status] || { label: status || '—', color: 'var(--text-muted)', bg: 'var(--bg-hover)' };
   return (
-    <span style={{
-      display: 'inline-block', padding: '2px 8px', fontSize: 11,
-      fontWeight: 600, color: m.color, background: m.bg,
-      borderRadius: 4, whiteSpace: 'nowrap',
+    <span className="badge" style={{
+      color: m.color,
+      background: m.bg,
+      border: `1px solid ${m.color}18`,
+      fontSize: 11,
+      fontWeight: 600,
     }}>
+      <span style={{
+        width: 5,
+        height: 5,
+        borderRadius: '50%',
+        background: m.color,
+        flexShrink: 0,
+      }} />
       {m.label}
     </span>
   );
@@ -67,7 +85,18 @@ export function StatusPill({ status }) {
 // ── Visa Badge ─────────────────────────────────────────
 export function VisaBadge({ visa }) {
   const m = VISA[visa] || { label: visa || '—', color: 'var(--text-muted)' };
-  return <span style={{ fontSize: 11, fontWeight: 600, color: m.color }}>{m.label}</span>;
+  return (
+    <span style={{
+      fontSize: 11,
+      fontWeight: 600,
+      color: m.color,
+      padding: '2px 8px',
+      borderRadius: 20,
+      background: `${m.color}10`,
+    }}>
+      {m.label}
+    </span>
+  );
 }
 
 // ── Source Badge ───────────────────────────────────────
@@ -75,8 +104,13 @@ export function SourceBadge({ source }) {
   const m = SOURCES[source] || { label: source, color: 'var(--text-muted)' };
   return (
     <span style={{
-      padding: '2px 6px', fontSize: 10, fontWeight: 600,
-      color: m.color, background: `${m.color}15`, borderRadius: 3,
+      padding: '3px 8px',
+      fontSize: 10,
+      fontWeight: 600,
+      color: m.color,
+      background: `${m.color}12`,
+      borderRadius: 20,
+      letterSpacing: '0.02em',
     }}>
       {m.label}
     </span>
@@ -86,13 +120,28 @@ export function SourceBadge({ source }) {
 // ── Card wrapper ───────────────────────────────────────
 export function Card({ title, children, action, style }) {
   return (
-    <div className="fade-in" style={{
-      background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-      borderRadius: 10, padding: '18px 20px', ...style,
+    <div className="fade-in glass-card" style={{
+      padding: '20px 22px',
+      ...style,
     }}>
       {(title || action) && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-          {title && <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{title}</h3>}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 16,
+        }}>
+          {title && (
+            <h3 style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: 'var(--text-muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}>
+              {title}
+            </h3>
+          )}
           {action}
         </div>
       )}
@@ -102,16 +151,52 @@ export function Card({ title, children, action, style }) {
 }
 
 // ── Stat Card ──────────────────────────────────────────
-export function StatCard({ label, value, sub, color = 'var(--cyan)' }) {
+export function StatCard({ label, value, sub, color = 'var(--cyan)', icon: Icon }) {
   return (
-    <div style={{
-      background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-      borderRadius: 10, padding: '16px 18px', position: 'relative', overflow: 'hidden',
+    <div className="glass-card" style={{
+      padding: '18px 20px',
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${color}, transparent)` }} />
-      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>{label}</div>
-      <div className="mono" style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: '-0.03em' }}>{value}</div>
-      {sub && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{sub}</div>}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 2,
+        background: `linear-gradient(90deg, ${color}, ${color}00)`,
+      }} />
+      <div style={{
+        position: 'absolute',
+        top: -20,
+        right: -20,
+        width: 80,
+        height: 80,
+        borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}08, transparent)`,
+        pointerEvents: 'none',
+      }} />
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+      }}>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>{label}</div>
+        {Icon && <Icon size={15} color={color} style={{ opacity: 0.5 }} />}
+      </div>
+      <div className="mono" style={{
+        fontSize: 28,
+        fontWeight: 800,
+        color,
+        letterSpacing: '-0.04em',
+        lineHeight: 1,
+      }}>
+        {value}
+      </div>
+      {sub && (
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6 }}>{sub}</div>
+      )}
     </div>
   );
 }
@@ -119,23 +204,66 @@ export function StatCard({ label, value, sub, color = 'var(--cyan)' }) {
 // ── Filter Input ───────────────────────────────────────
 export function FilterInput({ placeholder, value, onChange, style, type = 'text' }) {
   return (
-    <input type={type} placeholder={placeholder} value={value}
-      onChange={e => onChange(e.target.value)}
-      style={{
-        padding: '7px 12px', background: 'var(--bg-primary)', border: '1px solid var(--border)',
-        borderRadius: 6, color: 'var(--text-primary)', fontSize: 13, outline: 'none', ...style,
-      }}
-    />
+    <div style={{ position: 'relative', ...style }}>
+      {type === 'text' && (
+        <Search size={14} color="var(--text-muted)" style={{
+          position: 'absolute',
+          left: 10,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          pointerEvents: 'none',
+        }} />
+      )}
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        style={{
+          width: '100%',
+          padding: type === 'text' ? '8px 12px 8px 32px' : '8px 12px',
+          background: 'var(--bg-tertiary)',
+          border: '1px solid var(--border)',
+          borderRadius: 8,
+          color: 'var(--text-primary)',
+          fontSize: 13,
+          outline: 'none',
+          transition: 'border-color 0.2s, box-shadow 0.2s',
+        }}
+        onFocus={e => {
+          e.target.style.borderColor = 'var(--border-light)';
+          e.target.style.boxShadow = '0 0 0 3px rgba(6,182,212,0.08)';
+        }}
+        onBlur={e => {
+          e.target.style.borderColor = 'var(--border)';
+          e.target.style.boxShadow = 'none';
+        }}
+      />
+    </div>
   );
 }
 
 // ── Filter Select ──────────────────────────────────────
 export function FilterSelect({ value, onChange, options }) {
   return (
-    <select value={value} onChange={e => onChange(e.target.value)}
+    <select
+      value={value}
+      onChange={e => onChange(e.target.value)}
       style={{
-        padding: '7px 12px', background: 'var(--bg-primary)', border: '1px solid var(--border)',
-        borderRadius: 6, color: 'var(--text-primary)', fontSize: 13, outline: 'none', cursor: 'pointer',
+        padding: '8px 30px 8px 12px',
+        background: 'var(--bg-tertiary)',
+        border: '1px solid var(--border)',
+        borderRadius: 8,
+        color: 'var(--text-primary)',
+        fontSize: 13,
+        outline: 'none',
+        cursor: 'pointer',
+        appearance: 'none',
+        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b6b80' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+        backgroundPosition: 'right 8px center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '16px',
+        transition: 'border-color 0.2s',
       }}
     >
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -146,10 +274,37 @@ export function FilterSelect({ value, onChange, options }) {
 // ── Empty State ────────────────────────────────────────
 export function EmptyState({ icon = '📭', title, message }) {
   return (
-    <div style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>
-      <div style={{ fontSize: 48, marginBottom: 12 }}>{icon}</div>
-      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-secondary)' }}>{title}</div>
-      {message && <div style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6, maxWidth: 420, margin: '8px auto 0' }}>{message}</div>}
+    <div style={{
+      padding: '52px 24px',
+      textAlign: 'center',
+      color: 'var(--text-muted)',
+    }}>
+      <div style={{
+        fontSize: 48,
+        marginBottom: 16,
+        filter: 'grayscale(0.2)',
+      }}>
+        {icon}
+      </div>
+      <div style={{
+        fontSize: 15,
+        fontWeight: 700,
+        color: 'var(--text-secondary)',
+        marginBottom: 6,
+      }}>
+        {title}
+      </div>
+      {message && (
+        <div style={{
+          fontSize: 13,
+          lineHeight: 1.7,
+          maxWidth: 420,
+          margin: '0 auto',
+          color: 'var(--text-muted)',
+        }}>
+          {message}
+        </div>
+      )}
     </div>
   );
 }
