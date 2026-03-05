@@ -26,7 +26,7 @@ _client: Optional[anthropic.Anthropic] = None
 def get_client() -> anthropic.Anthropic:
     global _client
     if _client is None:
-        _client = anthropic.Anthropic(api_key=config.env.ANTHROPIC_API_KEY)
+        _client = anthropic.Anthropic(api_key=config.env.anthropic_api_key)
     return _client
 
 
@@ -61,11 +61,11 @@ async def call_haiku(
 ) -> str:
     """Call Claude Haiku (cheap, fast — scoring/classification)."""
     return await _call_model(
-        model=config.ai.scoring_model,
+        model=config.llm_config.get("scoring_model", "claude-haiku-4-5-20251001"),
         prompt=prompt,
         system=system,
-        max_tokens=max_tokens or config.ai.max_tokens_scoring,
-        temperature=temperature or config.ai.temperature_scoring,
+        max_tokens=max_tokens or config.llm_config.get("max_tokens_scoring", 1024),
+        temperature=temperature or config.llm_config.get("temperature_scoring", 0.0),
         operation=operation,
         application_id=application_id,
     )
@@ -81,11 +81,11 @@ async def call_sonnet(
 ) -> str:
     """Call Claude Sonnet (premium — resume writing/cover letters)."""
     return await _call_model(
-        model=config.ai.writing_model,
+        model=config.llm_config.get("writing_model", "claude-sonnet-4-5-20250929"),
         prompt=prompt,
         system=system,
-        max_tokens=max_tokens or config.ai.max_tokens_writing,
-        temperature=temperature or config.ai.temperature_writing,
+        max_tokens=max_tokens or config.llm_config.get("max_tokens_writing", 4096),
+        temperature=temperature or config.llm_config.get("temperature_writing", 0.3),
         operation=operation,
         application_id=application_id,
     )

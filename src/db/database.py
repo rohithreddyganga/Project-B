@@ -13,9 +13,14 @@ from src.db.models import Base
 
 logger = logging.getLogger(__name__)
 
+# ── Derive sync URL from async URL ───────────────────
+_async_url = config.env.database_url
+# Convert async URL to sync (e.g., sqlite+aiosqlite:// → sqlite:// , postgresql+asyncpg:// → postgresql://)
+_sync_url = _async_url.replace("+aiosqlite", "").replace("+asyncpg", "")
+
 # ── Async engine (for FastAPI + async pipeline) ─────
 async_engine = create_async_engine(
-    config.env.DATABASE_URL,
+    _async_url,
     echo=False,
     pool_size=5,
     max_overflow=10,
@@ -29,7 +34,7 @@ AsyncSessionLocal = async_sessionmaker(
 
 # ── Sync engine (for scheduler + migrations) ────────
 sync_engine = create_engine(
-    config.env.DATABASE_URL_SYNC,
+    _sync_url,
     echo=False,
     pool_size=5,
 )

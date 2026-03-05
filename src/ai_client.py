@@ -8,10 +8,9 @@ import json
 import logging
 from dataclasses import dataclass
 from anthropic import AsyncAnthropic
-from src.config import get_settings
+from src.config import config
 
 logger = logging.getLogger(__name__)
-settings = get_settings()
 
 # Model constants
 HAIKU = "claude-haiku-4-5-20251001"
@@ -35,7 +34,7 @@ class AIResponse:
 
 class AIClient:
     def __init__(self):
-        self.client = AsyncAnthropic(api_key=settings.anthropic_api_key)
+        self.client = AsyncAnthropic(api_key=config.env.anthropic_api_key)
         self.total_input_tokens = 0
         self.total_output_tokens = 0
         self.total_cost = 0.0

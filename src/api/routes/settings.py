@@ -2,7 +2,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-from src.config import load_config, get_config
+from src.config import config, load_yaml
 import yaml
 from pathlib import Path
 
@@ -24,7 +24,7 @@ class BlacklistUpdate(BaseModel):
 @router.get("/")
 async def get_settings():
     """Get current settings (safe subset for dashboard)."""
-    cfg = load_config()
+    cfg = config.settings
     return {
         "gates": cfg.get("gates", {}),
         "ats": cfg.get("ats", {}),
@@ -58,9 +58,9 @@ async def update_blacklist(body: BlacklistUpdate):
         with open(CONFIG_PATH, "w") as f:
             yaml.dump(cfg, f, default_flow_style=False)
         
-        # Clear cached config
-        load_config.cache_clear()
-        
+        # Reload config from disk
+        config.settings = load_yaml("settings.yaml")
+
         return {"status": "updated", "blacklist": cfg["blacklist"]}
     except Exception as e:
         raise HTTPException(500, f"Failed to update settings: {e}")

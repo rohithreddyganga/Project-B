@@ -1,8 +1,7 @@
 """API Routes — Pipeline control (start, stop, status, manual triggers)."""
 import asyncio
 from fastapi import APIRouter
-from src.pipeline.orchestrator import run_daily_pipeline
-from src.pipeline.scheduler import scheduler
+from src.pipeline.scheduler import run_daily_pipeline
 
 router = APIRouter()
 
@@ -26,7 +25,8 @@ async def pipeline_status():
     """Check if pipeline is currently running."""
     running = _running_task is not None and not _running_task.done()
     
-    # Get scheduled jobs info
+    # Get scheduled jobs info (lazy import to avoid circular dependency)
+    from src.api.main import scheduler
     jobs_info = []
     for job in scheduler.get_jobs():
         jobs_info.append({
@@ -34,7 +34,7 @@ async def pipeline_status():
             "name": job.name,
             "next_run": str(job.next_run_time) if job.next_run_time else None,
         })
-    
+
     return {
         "pipeline_running": running,
         "scheduled_jobs": jobs_info,

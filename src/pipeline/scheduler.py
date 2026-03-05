@@ -207,15 +207,62 @@ def _load_master_tex() -> Optional[str]:
 
 
 def _load_master_resume_text() -> str:
-    """Load and extract text from the master resume for scoring."""
+    """
+    Load and extract readable text from the master LaTeX resume for ATS scoring.
+
+    Multi-pass extraction that preserves content from formatting commands.
+    """
+    import re
     tex = _load_master_tex()
     if not tex:
         return ""
 
-    # Simple text extraction from LaTeX (strip commands)
-    import re
-    text = re.sub(r'\\[a-zA-Z]+\{([^}]*)\}', r'\1', tex)
-    text = re.sub(r'\\[a-zA-Z]+', '', text)
-    text = re.sub(r'[{}\\]', '', text)
+    text = tex
+
+    # Step 1: Remove comments (lines starting with %)
+    text = re.sub(r'%.*$', '', text, flags=re.MULTILINE)
+
+    # Step 2: Remove document preamble (everything before \begin{document})
+    doc_start = text.find(r'\begin{document}')
+    if doc_start >= 0:
+        text = text[doc_start + len(r'\begin{document}'):]
+
+    # Step 3: Remove \end{document}
+    text = text.replace(r'\end{document}', '')
+
+    # Step 4: Remove environment markers but keep content
+    text = re.sub(r'\\begin\{[^}]*\}(?:\[[^\]]*\])?', ' ', text)
+    text = re.sub(r'\\end\{[^}]*\}', ' ', text)
+
+    # Step 5: Extract content from formatting commands (keep the content)
+    # \href{url}{text} → text
+    text = re.sub(r'\\href\{[^}]*\}\{([^}]*)\}', r'\1', text)
+
+    # Iteratively strip \command{content} → content (handles nesting)
+    for _ in range(5):
+        prev = text
+        text = re.sub(r'\\[a-zA-Z]+\*?\{([^{}]*)\}', r' \1 ', text)
+        if text == prev:
+            break
+
+    # Step 6: Remove remaining bare commands (\item, \vspace, \hfill, etc.)
+    text = re.sub(r'\\[a-zA-Z]+\*?(?:\[[^\]]*\])?', ' ', text)
+
+    # Step 7: Remove LaTeX special characters
+    text = text.replace('~', ' ')
+    text = text.replace('\\\\', ' ')
+    text = re.sub(r'[{}\\$&^_#|]', ' ', text)
+
+    # Step 8: Clean up whitespace
     text = re.sub(r'\s+', ' ', text)
-    return text.strip()
+    text = text.strip()
+
+    if len(text) < 50:
+        logger.warning(
+            f"Extracted resume text is very short ({len(text)} chars). "
+            "Check that master.tex has real content."
+        )
+    else:
+        logger.debug(f"Resume text extracted: {len(text)} chars, ~{len(text.split())} words")
+
+    return text
