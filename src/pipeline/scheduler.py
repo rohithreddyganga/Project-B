@@ -15,7 +15,7 @@ from loguru import logger
 from src.config import config
 from src.db.models import Job, Application, JobStatus, VisaStatus, Tier, ApplicationSource, InterviewStage
 from src.db.session import async_session
-from src.scraper.orchestrator import harvest_jobs
+from src.scraper.orchestrator_v2 import harvest_jobs
 from src.filters.visa_filter import check_visa
 from src.filters.gate_checker import process_gates
 from src.filters.freshness import sort_by_freshness_and_score

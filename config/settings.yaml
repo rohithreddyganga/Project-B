@@ -71,7 +71,9 @@ visa_filter:
   llm_confidence_threshold: 0.90
 
 # ── Job Sources ──────────────────────────────────
+# 9 sources: 3 API + 3 RapidAPI + 3 ATS board feeds
 sources:
+  # ── API-based sources ─────────────────────────
   adzuna:
     enabled: true
     country: "us"
@@ -83,8 +85,92 @@ sources:
     max_pages: 10
   remoteok:
     enabled: true
-  ats_feeds:
+
+  # ── RapidAPI sources (all share JSEARCH_API_KEY) ─
+  linkedin_api:
     enabled: true
+    results_per_page: 25
+  activejobs:
+    enabled: true
+    results_per_page: 20
+  jobs_search_api:
+    enabled: true
+
+  # ── ATS Board Feeds (FREE — no API keys needed) ─
+  greenhouse:
+    enabled: true
+    companies:
+      # Big Tech / FAANG
+      - airbnb
+      - airtable
+      - andurilindustries
+      - asana
+      - cloudflare
+      - coinbase
+      - databricks
+      - datadog
+      - discord
+      - doordash
+      - dropbox
+      - duolingo
+      - figma
+      - hashicorp
+      - hubspot
+      - instacart
+      - lattice
+      - mongodb
+      - netlify
+      - notion
+      - openai
+      - pagerduty
+      - palantirtechnologies
+      - plaid
+      - ramp
+      - reddit
+      - retool
+      - robinhood
+      - samsara
+      - scale
+      - snyk
+      - splunk
+      - stripe
+      - toast
+      - twilio
+      - vercel
+      - wealthsimple
+      - zscaler
+
+  lever:
+    enabled: true
+    companies:
+      - Netflix
+      - zip
+      - mux
+      - webflow
+      - dbt-labs
+      - fivetran
+      - grafana-labs
+      - rudderstack
+      - temporal
+      - cockroachlabs
+      - tigera
+      - circleci
+      - launchdarkly
+      - vanta
+      - nowsecure
+      - benchling
+      - ironclad
+      - persona
+      - postman
+
+  smartrecruiters:
+    enabled: true
+    companies:
+      - Visa
+      - BOSCH
+      - Equinix
+      - FieldNation
+      - Samsara
 
 # ── Target Job Criteria ──────────────────────────
 job_criteria:

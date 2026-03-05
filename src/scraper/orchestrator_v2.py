@@ -1,8 +1,8 @@
 """
-Scraper orchestrator — runs all sources in parallel,
+Scraper orchestrator — runs ALL sources in parallel,
 deduplicates, and persists to database.
 
-Phase 2: Added LinkedIn API, Active Jobs DB, Jobs Search API.
+Full-scale: 9 sources (3 API + 3 RapidAPI + 3 ATS feeds).
 """
 import asyncio
 from datetime import datetime, timezone
@@ -20,6 +20,7 @@ from src.scraper.remoteok import scrape_remoteok
 from src.scraper.linkedin_api import scrape_linkedin_api
 from src.scraper.activejobs import scrape_activejobs
 from src.scraper.jobs_search_api import scrape_jobs_search_api
+from src.scraper.ats_feeds import scrape_greenhouse, scrape_lever, scrape_smartrecruiters
 from src.scraper.deduplicator import deduplicate_jobs
 from src.db.models import Job, JobStatus, VisaStatus
 
@@ -28,8 +29,19 @@ async def harvest_jobs(db: AsyncSession) -> List[Job]:
     """
     Run all scrapers in parallel, deduplicate, filter new jobs,
     and persist to database. Returns list of new Job records.
+
+    9 sources:
+      - Adzuna (API key)
+      - JSearch / RapidAPI (API key)
+      - RemoteOK (free)
+      - LinkedIn API / RapidAPI (API key — same as JSearch)
+      - Active Jobs DB / RapidAPI (API key — same as JSearch)
+      - Jobs Search API / RapidAPI (API key — same as JSearch)
+      - Greenhouse (free — public board API)
+      - Lever (free — public postings API)
+      - SmartRecruiters (free — public API)
     """
-    logger.info("Starting job harvest (6 sources)...")
+    logger.info("Starting job harvest (9 sources — full scale)...")
 
     # Run all scrapers concurrently
     results = await asyncio.gather(
@@ -39,6 +51,9 @@ async def harvest_jobs(db: AsyncSession) -> List[Job]:
         scrape_linkedin_api(),
         scrape_activejobs(),
         scrape_jobs_search_api(),
+        scrape_greenhouse(),
+        scrape_lever(),
+        scrape_smartrecruiters(),
         return_exceptions=True,
     )
 
@@ -47,6 +62,7 @@ async def harvest_jobs(db: AsyncSession) -> List[Job]:
     source_names = [
         "Adzuna", "JSearch", "RemoteOK",
         "LinkedIn API", "Active Jobs DB", "Jobs Search API",
+        "Greenhouse", "Lever", "SmartRecruiters",
     ]
     for i, result in enumerate(results):
         if isinstance(result, Exception):
@@ -108,6 +124,6 @@ async def harvest_jobs(db: AsyncSession) -> List[Job]:
     logger.info(
         f"Harvest complete: {len(new_jobs)} new jobs added "
         f"(skipped {len(existing_fps)} existing, "
-        f"{len(all_scraped) - len(unique_jobs)} duplicates)"
+        f"{len(all_scraped) - len(unique_jobs)} cross-source duplicates)"
     )
     return new_jobs

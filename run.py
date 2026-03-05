@@ -53,7 +53,7 @@ def main():
         # Just scrape jobs (for testing)
         logger.info("Running scraper only...")
         from src.db.session import async_session, init_db
-        from src.scraper.orchestrator import harvest_jobs
+        from src.scraper.orchestrator_v2 import harvest_jobs
 
         async def _scrape():
             await init_db()
